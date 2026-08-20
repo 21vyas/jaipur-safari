@@ -1,7 +1,7 @@
 const WHATSAPP_NUMBER = '917976582113';
 const CONTACT_EMAIL = 'jaipursafari1@gmail.com';
 
-// Premium visual polish and logo treatment.
+// Premium header/logo treatment.
 const polish = document.createElement('style');
 polish.textContent = `
 .nav-whatsapp{min-height:42px!important;height:42px!important;padding:0 16px!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:8px!important;border-radius:999px!important;font-size:14px!important;line-height:1!important;white-space:nowrap!important}
@@ -11,12 +11,43 @@ polish.textContent = `
 .floating-wa svg{width:34px!important;height:34px!important;max-width:34px!important;max-height:34px!important;display:block!important}
 .floating-wa span{position:absolute!important;width:1px!important;height:1px!important;overflow:hidden!important;clip:rect(0 0 0 0)!important;white-space:nowrap!important}
 
-/* Make the existing white-background PNG logo blend cleanly into the premium header. */
-.site-header .brand-logo{width:58px!important;height:58px!important;max-width:58px!important;max-height:58px!important;min-width:58px!important;min-height:58px!important;object-fit:contain!important;padding:5px!important;border-radius:15px!important;background:#d4a84b!important;border:1px solid #e9c875!important;box-shadow:0 4px 18px rgba(0,0,0,.35)!important;mix-blend-mode:multiply!important;filter:contrast(1.12) saturate(1.2)!important}
-.footer-brand .brand-logo{width:54px!important;height:54px!important;max-width:54px!important;max-height:54px!important;min-width:54px!important;min-height:54px!important;object-fit:contain!important;padding:4px!important;border-radius:13px!important;background:#d4a84b!important;border:1px solid #e9c875!important;mix-blend-mode:multiply!important;filter:contrast(1.12) saturate(1.2)!important}
-@media(max-width:600px){.site-header .brand-logo{width:50px!important;height:50px!important;max-width:50px!important;max-height:50px!important;min-width:50px!important;min-height:50px!important}.footer-brand .brand-logo{width:48px!important;height:48px!important;max-width:48px!important;max-height:48px!important;min-width:48px!important;min-height:48px!important}}
+/* New transparent full Jaipur Safari wordmark: no white box. */
+.site-header .brand{gap:0!important;align-items:center!important}
+.site-header .brand-logo{width:300px!important;height:78px!important;max-width:300px!important;max-height:78px!important;min-width:300px!important;min-height:78px!important;object-fit:contain!important;object-position:left center!important;padding:0!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;mix-blend-mode:normal!important;filter:none!important}
+.site-header .brand>span{display:none!important}
+.footer-brand{gap:0!important}
+.footer-brand .brand-logo{width:260px!important;height:70px!important;max-width:260px!important;max-height:70px!important;min-width:260px!important;min-height:70px!important;object-fit:contain!important;object-position:left center!important;padding:0!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;mix-blend-mode:normal!important;filter:none!important}
+.footer-brand>span{display:none!important}
+@media(max-width:900px){.site-header .brand-logo{width:250px!important;height:68px!important;max-width:250px!important;max-height:68px!important;min-width:250px!important;min-height:68px!important}.footer-brand .brand-logo{width:230px!important;height:62px!important;max-width:230px!important;max-height:62px!important;min-width:230px!important;min-height:62px!important}}
+@media(max-width:600px){.site-header .brand-logo{width:205px!important;height:58px!important;max-width:205px!important;max-height:58px!important;min-width:205px!important;min-height:58px!important}.footer-brand .brand-logo{width:200px!important;height:54px!important;max-width:200px!important;max-height:54px!important;min-width:200px!important;min-height:54px!important}}
 `;
 document.head.appendChild(polish);
+
+// Ensure the uploaded transparent logo is used and override any older inline sizing.
+function applyLogo() {
+  document.querySelectorAll('.site-header .brand-logo, .footer-brand .brand-logo').forEach((img) => {
+    const isHeader = img.closest('.site-header');
+    const width = isHeader ? '300px' : '260px';
+    const height = isHeader ? '78px' : '70px';
+    img.src = 'images/logo.png?v=20260820-3';
+    img.alt = 'Jaipur Safari Tour & Travels Pvt. Ltd.';
+    img.style.setProperty('width', width, 'important');
+    img.style.setProperty('height', height, 'important');
+    img.style.setProperty('max-width', width, 'important');
+    img.style.setProperty('max-height', height, 'important');
+    img.style.setProperty('min-width', width, 'important');
+    img.style.setProperty('min-height', height, 'important');
+    img.style.setProperty('padding', '0', 'important');
+    img.style.setProperty('background', 'transparent', 'important');
+    img.style.setProperty('border', '0', 'important');
+    img.style.setProperty('border-radius', '0', 'important');
+    img.style.setProperty('box-shadow', 'none', 'important');
+    img.style.setProperty('mix-blend-mode', 'normal', 'important');
+    img.style.setProperty('filter', 'none', 'important');
+  });
+  document.querySelectorAll('.site-header .brand>span, .footer-brand>span').forEach((el) => el.remove());
+}
+applyLogo();
 
 const year = document.getElementById('year');
 if (year) year.textContent = new Date().getFullYear();
