@@ -1,0 +1,1 @@
+window.JAIPUR_SAFARI_IMAGES = {};
