@@ -1,5 +1,6 @@
 const WHATSAPP_NUMBER = '917976582113';
-const CONTACT_EMAIL = 'jaipursafari1@gmail.com';
+const CONTACT_EMAIL = 'support@jaipursafaritours.in';
+const CC_EMAIL = 'jaipursafari1@gmail.com';
 const EMAIL_ENDPOINT = `https://formsubmit.co/ajax/${CONTACT_EMAIL}`;
 
 // Premium header/logo treatment.
@@ -27,7 +28,7 @@ function applyLogo() {
     const isHeader = img.closest('.site-header');
     const width = isHeader ? '300px' : '260px';
     const height = isHeader ? '78px' : '70px';
-    img.src = 'images/logo.png?v=20260820-4';
+    img.src = 'images/logo.png?v=20260820-5';
     img.alt = 'Jaipur Safari Tour & Travels Pvt. Ltd.';
     img.style.setProperty('width', width, 'important');
     img.style.setProperty('height', height, 'important');
@@ -87,6 +88,17 @@ if (quoteForm) {
     const destination = data.get('destination') || '';
     const requirement = data.get('message') || '';
 
+    const whatsappMessage = [
+      'New Website Enquiry - Jaipur Safari',
+      `Name: ${name}`,
+      `Mobile: ${phone}`,
+      `Travel Date: ${date || 'Not specified'}`,
+      `Vehicle: ${vehicle || 'Not specified'}`,
+      `Pickup: ${pickup || 'Not specified'}`,
+      `Destination: ${destination || 'Not specified'}`,
+      `Requirement: ${requirement || 'Not specified'}`
+    ].join('\n');
+
     const emailPayload = {
       name,
       phone,
@@ -97,6 +109,7 @@ if (quoteForm) {
       message: requirement,
       _subject: 'New Website Enquiry - Jaipur Safari Tour & Travels',
       _template: 'table',
+      _cc: CC_EMAIL,
       _url: window.location.href
     };
 
@@ -122,11 +135,15 @@ if (quoteForm) {
         throw new Error(result.message || 'Email submission failed');
       }
 
-      alert('Enquiry sent successfully to jaipursafari1@gmail.com. Thank you!');
       quoteForm.reset();
+      alert('Enquiry submitted successfully. Email has been sent to Jaipur Safari. WhatsApp will open next.');
+
+      const waUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(whatsappMessage)}`;
+      const waWindow = window.open(waUrl, '_blank', 'noopener,noreferrer');
+      if (!waWindow) window.location.href = waUrl;
     } catch (error) {
       console.error('Email enquiry error:', error);
-      alert('Email could not be sent. Please check the activation email from FormSubmit, including Spam/Junk, or use the WhatsApp button.');
+      alert('Enquiry could not be sent by email. Please check the FormSubmit activation email for support@jaipursafaritours.in (including Spam/Junk), then try again. WhatsApp was not opened because email submission was not confirmed.');
     } finally {
       if (submitButton) {
         submitButton.disabled = false;
