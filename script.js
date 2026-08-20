@@ -11,8 +11,6 @@ polish.textContent = `
 .floating-wa{width:62px!important;height:62px!important;padding:0!important;border-radius:50%!important;display:flex!important;align-items:center!important;justify-content:center!important;gap:0!important}
 .floating-wa svg{width:34px!important;height:34px!important;max-width:34px!important;max-height:34px!important;display:block!important}
 .floating-wa span{position:absolute!important;width:1px!important;height:1px!important;overflow:hidden!important;clip:rect(0 0 0 0)!important;white-space:nowrap!important}
-
-/* New transparent full Jaipur Safari wordmark: no white box. */
 .site-header .brand{gap:0!important;align-items:center!important}
 .site-header .brand-logo{width:300px!important;height:78px!important;max-width:300px!important;max-height:78px!important;min-width:300px!important;min-height:78px!important;object-fit:contain!important;object-position:left center!important;padding:0!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;mix-blend-mode:normal!important;filter:none!important}
 .site-header .brand>span{display:none!important}
@@ -24,13 +22,12 @@ polish.textContent = `
 `;
 document.head.appendChild(polish);
 
-// Ensure the uploaded transparent logo is used and override any older inline sizing.
 function applyLogo() {
   document.querySelectorAll('.site-header .brand-logo, .footer-brand .brand-logo').forEach((img) => {
     const isHeader = img.closest('.site-header');
     const width = isHeader ? '300px' : '260px';
     const height = isHeader ? '78px' : '70px';
-    img.src = 'images/logo.png?v=20260820-3';
+    img.src = 'images/logo.png?v=20260820-4';
     img.alt = 'Jaipur Safari Tour & Travels Pvt. Ltd.';
     img.style.setProperty('width', width, 'important');
     img.style.setProperty('height', height, 'important');
@@ -90,23 +87,6 @@ if (quoteForm) {
     const destination = data.get('destination') || '';
     const requirement = data.get('message') || '';
 
-    const message = [
-      'Hello Jaipur Safari Tour & Travels,',
-      '',
-      'I would like to enquire about vehicle rental.',
-      `Name: ${name}`,
-      `Mobile: ${phone}`,
-      `Travel Date: ${date}`,
-      `Vehicle: ${vehicle}`,
-      `Pickup: ${pickup}`,
-      `Destination: ${destination}`,
-      `Requirement: ${requirement}`
-    ].join('\n');
-
-    // Open WhatsApp immediately so browser popup blockers do not stop it.
-    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`, '_blank', 'noopener');
-
-    // Send the same enquiry directly to the owner's email through FormSubmit.
     const emailPayload = {
       name,
       phone,
@@ -117,7 +97,6 @@ if (quoteForm) {
       message: requirement,
       _subject: 'New Website Enquiry - Jaipur Safari Tour & Travels',
       _template: 'table',
-      _captcha: 'false',
       _url: window.location.href
     };
 
@@ -143,11 +122,11 @@ if (quoteForm) {
         throw new Error(result.message || 'Email submission failed');
       }
 
-      alert('Enquiry sent successfully to WhatsApp and email. Thank you!');
+      alert('Enquiry sent successfully to jaipursafari1@gmail.com. Thank you!');
       quoteForm.reset();
     } catch (error) {
       console.error('Email enquiry error:', error);
-      alert('WhatsApp enquiry was opened, but the email could not be sent. Please call +91 79765 82113.');
+      alert('Email could not be sent. Please check the activation email from FormSubmit, including Spam/Junk, or use the WhatsApp button.');
     } finally {
       if (submitButton) {
         submitButton.disabled = false;
