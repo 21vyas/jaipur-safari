@@ -1,5 +1,6 @@
 const WHATSAPP_NUMBER = '917976582113';
 const CONTACT_EMAIL = 'jaipursafari1@gmail.com';
+const EMAIL_ENDPOINT = `https://formsubmit.co/ajax/${CONTACT_EMAIL}`;
 
 // Premium header/logo treatment.
 const polish = document.createElement('style');
@@ -77,24 +78,81 @@ document.querySelectorAll('[data-vehicle]').forEach((link) => {
 
 const quoteForm = document.getElementById('quoteForm');
 if (quoteForm) {
-  quoteForm.addEventListener('submit', (event) => {
+  quoteForm.addEventListener('submit', async (event) => {
     event.preventDefault();
+
     const data = new FormData(event.currentTarget);
+    const name = data.get('name') || '';
+    const phone = data.get('phone') || '';
+    const date = data.get('date') || '';
+    const vehicle = data.get('vehicle') || '';
+    const pickup = data.get('pickup') || '';
+    const destination = data.get('destination') || '';
+    const requirement = data.get('message') || '';
+
     const message = [
       'Hello Jaipur Safari Tour & Travels,',
       '',
       'I would like to enquire about vehicle rental.',
-      `Name: ${data.get('name') || ''}`,
-      `Mobile: ${data.get('phone') || ''}`,
-      `Travel Date: ${data.get('date') || ''}`,
-      `Vehicle: ${data.get('vehicle') || ''}`,
-      `Pickup: ${data.get('pickup') || ''}`,
-      `Destination: ${data.get('destination') || ''}`,
-      `Requirement: ${data.get('message') || ''}`
+      `Name: ${name}`,
+      `Mobile: ${phone}`,
+      `Travel Date: ${date}`,
+      `Vehicle: ${vehicle}`,
+      `Pickup: ${pickup}`,
+      `Destination: ${destination}`,
+      `Requirement: ${requirement}`
     ].join('\n');
 
-    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`, '_blank');
-    const subject = 'Website Enquiry - Jaipur Safari Tour & Travels';
-    window.location.href = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(message)}`;
+    // Open WhatsApp immediately so browser popup blockers do not stop it.
+    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`, '_blank', 'noopener');
+
+    // Send the same enquiry directly to the owner's email through FormSubmit.
+    const emailPayload = {
+      name,
+      phone,
+      date,
+      vehicle,
+      pickup,
+      destination,
+      message: requirement,
+      _subject: 'New Website Enquiry - Jaipur Safari Tour & Travels',
+      _template: 'table',
+      _captcha: 'false',
+      _url: window.location.href
+    };
+
+    const submitButton = quoteForm.querySelector('button[type="submit"]');
+    const originalButtonText = submitButton ? submitButton.textContent : '';
+    if (submitButton) {
+      submitButton.disabled = true;
+      submitButton.textContent = 'Sending Enquiry...';
+    }
+
+    try {
+      const response = await fetch(EMAIL_ENDPOINT, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify(emailPayload)
+      });
+
+      const result = await response.json();
+      if (!response.ok || result.success === false) {
+        throw new Error(result.message || 'Email submission failed');
+      }
+
+      alert('Enquiry sent successfully to WhatsApp and email. Thank you!');
+      quoteForm.reset();
+    } catch (error) {
+      console.error('Email enquiry error:', error);
+      alert('WhatsApp enquiry was opened, but the email could not be sent. Please call +91 79765 82113.');
+    } finally {
+      if (submitButton) {
+        submitButton.disabled = false;
+        submitButton.textContent = originalButtonText;
+      }
+    }
   });
 }
